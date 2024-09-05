@@ -1,0 +1,13 @@
+.nosotros {
+    @include tablet {
+        @include grid(2, 2rem);
+    }
+}
+
+.nosotros-contenido {
+    p:first-of-type {
+        font-weight: $black;
+        font-size: 2.2rem;
+        margin-bottom: 3rem;
+    }
+}

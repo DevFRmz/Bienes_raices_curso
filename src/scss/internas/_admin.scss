@@ -1,0 +1,63 @@
+.main-admin {
+    min-height: 60vh;
+}
+
+.alerta {
+    border-radius: 1rem;
+    margin: 1rem auto;
+    color: $blanco;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    padding: 1rem;
+    
+    &.error {
+        background-color: $rojo;
+    }
+
+    &.exito {
+        background-color: $verde;
+        //forwards permite que se queden los estilos del keyframe cuando termine la animacion
+        animation: desaparecer 2s forwards 3s;
+    }
+}
+
+@keyframes desaparecer {
+    to {
+        opacity: 0;
+        display: none;
+    }
+}
+
+.propiedades {
+    margin: 2rem auto;
+    width: 100%;
+    border-spacing: 0;
+
+    thead {
+        background-color: $verde;
+
+        th {
+            color: $blanco;
+            padding: 2rem;
+        }
+    }
+
+    tbody {
+        td {
+            text-align: center;
+        }
+
+    }
+
+    img {
+        width: 20rem;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+}
+
+.img-small {
+    width: 20rem;
+    padding: 1rem;
+}

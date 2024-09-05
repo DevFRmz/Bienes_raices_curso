@@ -1,0 +1,63 @@
+.boton-amarillo-block {
+    @include boton($amarillo, block);
+}
+
+.boton-amarillo {
+    @include boton($amarillo, inline-block);
+}
+
+.boton-verde {
+    @include boton($verde, inline-block);
+}
+
+.boton-verde-block {
+    @include boton($verde, block);
+}
+
+.boton-rojo-block {
+    @include boton($rojo, block);
+}
+
+
+.boton-return {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    max-width: 50rem;
+    margin: 0 auto;
+    @include tablet {
+        width: 30rem;
+        margin: 0;
+    }
+
+    &::before {
+        content: '';
+        display: inline-flex;
+        align-items: center;
+        width: 3rem;
+        height: 3rem;
+        background-image: url('../img/icono_return.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        padding-right: 4rem;
+        filter: invert(100%);
+    }
+}
+
+.boton-add {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    max-width: 50rem;
+    margin: 0 auto;
+    &::before {
+        content: '';
+        width: 3rem;
+        height: 3rem;
+        background-image: url('../img/icon_add.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        padding-right: 4rem;
+        filter: invert(100%);
+    }
+}
