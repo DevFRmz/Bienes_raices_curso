@@ -1,8 +1,13 @@
 <?php
 declare(strict_types = 1);
+require '../../includes/funciones.php';
+
+if(!estaAutenticado()){
+    header('Location: /bienesraices');
+}
+
 //conección a la base de datos ($conn)
 require '../../includes/config/database.php';
-include '../../includes/funciones.php';
 includeTemplate('header.php');
 
 //obtener vendedores de la base de datos

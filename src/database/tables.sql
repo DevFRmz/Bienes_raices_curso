@@ -20,3 +20,9 @@ CREATE TABLE propiedades(
 
     FOREIGN KEY (vendedor_id) REFERENCES vendedores(id) ON DELETE CASCADE
 );
+
+CREATE TABLE usuarios(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(50) NOT NULL,
+    password CHAR(60) NOT NULL
+);

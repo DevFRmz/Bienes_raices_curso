@@ -1,3 +1,13 @@
+<?php
+    if(!isset($_SESSION)){
+        session_start();
+    }
+
+    //si login no es true auth toma null
+    $auth = $_SESSION['login'] ?? false;
+    var_dump($auth);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,10 +36,13 @@
                     <img src="/bienesraices/build/img/dark-mode.svg" alt="icon dark mode" class="dark-mode-button">
 
                     <nav class="navegacion">
-                        <a href="nosotros.php">Nosotros</a>
-                        <a href="anuncios.php">Anuncios</a>
-                        <a href="blog.php">Blog</a>
-                        <a href="contacto.php">Contacto</a>
+                        <a href="/bienesraices/nosotros.php">Nosotros</a>
+                        <a href="/bienesraices/anuncios.php">Anuncios</a>
+                        <a href="/bienesraices/blog.php">Blog</a>
+                        <a href="/bienesraices/contacto.php">Contacto</a>
+                        <?php if($auth): ?>
+                            <a href="/bienesraices/logout.php">Cerrar sesión</a>
+                        <?php endif ?>
                     </nav>
                 </div>
             </div> <!-- barra -->

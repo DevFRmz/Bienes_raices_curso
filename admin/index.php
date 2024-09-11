@@ -1,5 +1,10 @@
 <?php
 declare(strict_types = 1);
+require '../includes/funciones.php';
+
+if(!estaAutenticado()){
+    header('Location: /bienesraices');
+}
 
 //importar base de datos ($conn)
 require '../includes/config/database.php';
@@ -28,7 +33,6 @@ $query = "SELECT * FROM propiedades";
 $statement = $conn->query($query);
 $propiedades = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-include '../includes/funciones.php';
 includeTemplate('header.php');
 //para mostrar mensaje de creacion de propiedad exitosa
 $resultado = $_GET['resultado'];
