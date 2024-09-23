@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-include 'includes/funciones.php';
+include 'includes/app.php';
 //recibe como segundo parametro un booleano que indica si es la pagina index (principal);
 includeTemplate('header.php', true);
 

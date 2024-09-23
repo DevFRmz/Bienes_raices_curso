@@ -5,7 +5,6 @@
 
     //si login no es true auth toma null
     $auth = $_SESSION['login'] ?? false;
-    var_dump($auth);
 ?>
 
 <!DOCTYPE html>

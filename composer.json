@@ -1,0 +1,19 @@
+{
+    "name": "felipe1/bienesraices",
+    "description": "Pagina de bienes raices",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "classes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "DevFRmz",
+            "email": "dev.frmz08@gmail.com"
+        }
+    ],
+    "require": {
+        "intervention/image": "^3.0"
+    }
+}

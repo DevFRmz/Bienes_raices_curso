@@ -1,12 +1,10 @@
 <?php
 declare(strict_types = 1);
-include 'includes/funciones.php';
+include 'includes/app.php';
 
 if(estaAutenticado()){
     header('Location: ./admin');
 }
-
-require 'includes/config/database.php';
 
 $errores = [];
 

@@ -7,8 +7,7 @@ if(!$id){
     header('Location: /');
 }
 
-require 'includes/config/database.php';
-include 'includes/funciones.php';
+require 'includes/app.php'; 
 includeTemplate('header.php');
 
 

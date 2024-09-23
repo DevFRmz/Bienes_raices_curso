@@ -1,46 +1,31 @@
 <?php
-declare(strict_types = 1);
-require '../../includes/funciones.php';
+require '../../includes/app.php';
+use App\Propiedad;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+
 
 if(!estaAutenticado()){
     header('Location: /bienesraices');
 }
 
 //conección a la base de datos ($conn)
-require '../../includes/config/database.php';
 includeTemplate('header.php');
 
 //obtener vendedores de la base de datos
 $statement = $conn->query("SELECT * FROM vendedores");
 $vendedores = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $datos = [
-        "titulo"          => $_POST['titulo'],
-        "precio"          => $_POST['precio'],
-        "imagen"          => $_FILES['imagen'],
-        "descripcion"     => $_POST['descripcion'],
-        "habitaciones"    => $_POST['habitaciones'],
-        "wc"              => $_POST['wc'],
-        "estacionamiento" => $_POST['estacionamiento'],
-        "vendedor"        => $_POST['vendedor'],
-        "creado"          => date('Y/m/d')
-    ];
+if($_SERVER['REQUEST_METHOD'] === 'POST'){ 
+    $propiedad = new Propiedad($_POST);
 
-    $errores = [];
-    //validar si se mandaron todos los datos, si no mandar error
-    foreach ($datos as $key => $value) {
-        if(!$value){
-            $errores[] = "Campo $key es requerido";
-        }
-    }
-
-    if(empty($datos['imagen']['name'])){
-        $errores[] = "Archivo de imagen requerido";
-    }
+    $errores = $propiedad->validar();
 
     //si no hay errores ingresar a la base de datos
     if(empty($errores)){
+
+        $propiedad->guardar();
+        $datos = $propiedad->atributos();
 
         /* Subida de archivos al servidor */
         //carpeta donde se almacenaran
@@ -52,6 +37,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         if(!is_dir($carpetaImagenes)){
             mkdir($carpetaImagenes);
         }
+
+        //Realiza un resize
+        // create new image instance (800 x 600)
+        $manager = new ImageManager(Driver::class);
+        $image = $manager->read($_FILES['imagen']['tmp_name']);
+        // crop the best fitting 5:3 (600x360) ratio and resize to 800x600 pixel
+        $img->cover(800, 600);
 
         //subida de imagen
         move_uploaded_file($datos['imagen']['tmp_name'], $carpetaImagenes . $nombreImagen);
@@ -100,7 +92,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         <h1>Crear</h1>
 
         <a href="../index.php" class="boton-verde boton-return">Regresar</a>
-        Todos los derechos reservados 2024 ©
+
+        <?php foreach($errores as $error): ?>
+            <p class="alerta error"><?php echo $error; ?></p>
+        <?php endforeach ?>
 
         <form action="crear.php" method="post" class="formulario" enctype="multipart/form-data">
             <fieldset>
@@ -135,7 +130,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <fieldset>
                 <legend>Vendedor</legend>
 
-                <select name="vendedor">
+                <select name="vendedor_id">
                     <option selected disabled>Selecciona una opción</option>
                     <?php foreach($vendedores as $vendedor): ?>
                     <option value="<?php echo $vendedor['id'] ?>"><?php echo "{$vendedor['nombre']} {$vendedor['apellido']}" ?></option>
