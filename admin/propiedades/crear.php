@@ -1,13 +1,13 @@
 <?php
+ini_set('display_errors', 1);
 require '../../includes/app.php';
 use App\Propiedad;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
 
-if(!estaAutenticado()){
-    header('Location: /bienesraices');
-}
+if(!estaAutenticado()) header('Location: /bienesraices');
+
 
 //conección a la base de datos ($conn)
 includeTemplate('header.php');
@@ -16,72 +16,41 @@ includeTemplate('header.php');
 $statement = $conn->query("SELECT * FROM vendedores");
 $vendedores = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+$errores = [];
+
 if($_SERVER['REQUEST_METHOD'] === 'POST'){ 
     $propiedad = new Propiedad($_POST);
 
-    $errores = $propiedad->validar();
-
-    //si no hay errores ingresar a la base de datos
-    if(empty($errores)){
-
-        $propiedad->guardar();
-        $datos = $propiedad->atributos();
-
-        /* Subida de archivos al servidor */
-        //carpeta donde se almacenaran
-        $carpetaImagenes = '../../imagenes/';
+    if($_FILES['imagen']['tmp_name']){
         $nombreImagen = md5( uniqid() ) . ".jpg";
-        $datos['imagen']['name'] = $nombreImagen;
-
-        //verificar si esta creada la carpeta, si no lo esta, la crea
-        if(!is_dir($carpetaImagenes)){
-            mkdir($carpetaImagenes);
-        }
+        $propiedad->setImagen($nombreImagen);
 
         //Realiza un resize
         // create new image instance (800 x 600)
-        $manager = new ImageManager(Driver::class);
+        $manager = new ImageManager(new Driver());
         $image = $manager->read($_FILES['imagen']['tmp_name']);
-        // crop the best fitting 5:3 (600x360) ratio and resize to 800x600 pixel
-        $img->cover(800, 600);
+        // crop the best fitting (600x360) ratio and resize to 800x600 pixel
+        $image->cover(800, 600);
+        $imageEncoded = $image->toJpeg(); 
+    }
+    //obtener datos de los atributos para mostrarlos en el formulario
+    $datos = $propiedad->atributos();
+    
+    //verificar si estan todos los datos completos
+    $errores = $propiedad->validar();
 
-        //subida de imagen
-        move_uploaded_file($datos['imagen']['tmp_name'], $carpetaImagenes . $nombreImagen);
+    //si no hay errores, guardar en la base de datos
+    if(empty($errores)){
+        //verificar si esta creada la carpeta de imagenes, si no lo esta, la crea
+        //(la constante CARPETA_IMAGENES viene de funciones.php)
+        if(!is_dir(CARPETA_IMAGENES)){
+            mkdir(CARPETA_IMAGENES);
+        } 
 
-        $query = "INSERT INTO propiedades(
-            vendedor_id,
-            titulo,
-            precio,
-            imagen,
-            descripcion,
-            habitaciones,
-            wc,
-            estacionamiento,
-            creado
-        ) VALUES (
-            :vendedor_id,
-            :titulo,
-            :precio,
-            :imagen,
-            :descripcion,
-            :habitaciones,
-            :wc,
-            :estacionamiento,
-            :creado
-        )";
+        //guardar imagen en el servidor
+        $imageEncoded->save(CARPETA_IMAGENES . $nombreImagen);
 
-        $statement = $conn->prepare($query);
-        $succesfull = $statement->execute([
-            ':vendedor_id'     => $datos['vendedor'],
-            ':titulo'          => $datos['titulo'],
-            ':precio'          => $datos['precio'],
-            ':imagen'          => $datos['imagen']['name'],
-            ':descripcion'     => $datos['descripcion'],
-            ':habitaciones'    => $datos['habitaciones'],
-            ':wc'              => $datos['wc'],
-            ':estacionamiento' => $datos['estacionamiento'],
-            ':creado'          => $datos['creado']
-        ]);
+        $succesfull = $propiedad->guardar();
 
         if($succesfull) header('Location: /bienesraices/admin?resultado=1');
     }

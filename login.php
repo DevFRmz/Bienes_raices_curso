@@ -2,10 +2,8 @@
 declare(strict_types = 1);
 include 'includes/app.php';
 
-if(estaAutenticado()){
-    header('Location: ./admin');
-}
-
+if(estaAutenticado()) header('Location: ./admin');
+    
 $errores = [];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -28,7 +26,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $user = $statement->fetch(PDO::FETCH_ASSOC);
 
         if($user){
+
             $auth = password_verify($password, $user['password']);
+
             if($auth){
                 session_start();
 
@@ -36,7 +36,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $_SESSION["login"] = true;
 
                 header('Location: ./admin');
+            } else {
+                $errores[] = "Credenciales no validas";
             }
+
         } else {
             $errores[] = "Credenciales no validas";
         }
@@ -50,7 +53,7 @@ includeTemplate('header.php');
 
     <main class="contenedor seccion login">
         <h1>Iniciar sesión</h1>
-        <!--TODo pendiente arreglar, no muestra erroes -->
+        
         <?php foreach($errores as $error): ?>
             <p class="alerta error"><?php echo $error; ?></p>
         <?php endforeach ?>
@@ -60,7 +63,7 @@ includeTemplate('header.php');
                 <legend>Email y Password</legend>
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" >
                 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>

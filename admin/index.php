@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
-require '../includes/funciones.php';
 
-if(!estaAutenticado()){
-    header('Location: /bienesraices');
-}
+use App\Propiedad;
 
-//importar base de datos ($conn)
-require '../includes/config/database.php';
+require '../includes/app.php';
+
+if(!estaAutenticado()) header('Location: /bienesraices');
+
+//Metodo para obtener propiedades de la base de datos
+$propiedades = Propiedad::all();
 
 //eliminar propiedad
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -26,12 +27,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($succesfull) header('Location: /bienesraices/admin?resultado=3');
 }
-
-
-//obtener propiedades de la base de datos
-$query = "SELECT * FROM propiedades";
-$statement = $conn->query($query);
-$propiedades = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 includeTemplate('header.php');
 //para mostrar mensaje de creacion de propiedad exitosa
