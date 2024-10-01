@@ -25,8 +25,8 @@ class Propiedad {
         $this->id = $args['id'] ?? 0;
         $this->vendedor_id = $args['vendedor_id'] ?? 0;
         $this->titulo = $args['titulo'] ?? '';
-        $this->precio = $args['precio'] ?? 0.0;
-        $this->imagen = $args['imagen'] ?? 'imagen.jpg';
+        $this->precio = $args['precio'] ?? 0;
+        $this->imagen = $args['imagen'] ?? '';
         $this->descripcion = $args['descripcion'] ?? '';
         $this->habitaciones = $args['habitaciones'] ?? 0;
         $this->wc = $args['wc'] ?? 0;
@@ -76,6 +76,35 @@ class Propiedad {
         return $succesfull;
     }
 
+    public function actualizar($id) : int {
+        $query = "UPDATE propiedades
+                SET vendedor_id = :vendedor_id,
+                    titulo = :titulo,
+                    precio = :precio,
+                    imagen = :imagen,
+                    descripcion = :descripcion,
+                    habitaciones = :habitaciones,
+                    wc = :wc,
+                    estacionamiento = :estacionamiento,
+                    creado = :creado
+                WHERE id = :id";
+
+        $statement = self::$db->prepare($query);
+        $succesfull = $statement->execute([
+            ':vendedor_id'     => $this->vendedor_id,
+            ':titulo'          => $this->titulo,
+            ':precio'          => $this->precio,
+            ':imagen'          => $this->imagen,
+            ':descripcion'     => $this->descripcion,
+            ':habitaciones'    => $this->habitaciones,
+            ':wc'              => $this->wc,
+            ':estacionamiento' => $this->estacionamiento,
+            ':creado'          => $this->creado,
+            ':id'              => $id
+        ]);
+        return $succesfull;
+    }
+
     //validar que el usuario mando todos los datos
     public function validar() : array {
         $datos = $this->atributos();
@@ -92,6 +121,14 @@ class Propiedad {
         return self::$errores;
     }
 
+    public function validateNumber() : void {
+        $this->vendedor_id = intval($this->vendedor_id);
+        $this->precio = floatval($this->precio);
+        $this->habitaciones = intval($this->habitaciones);
+        $this->wc = intval($this->wc);
+        $this->estacionamiento = intval($this->estacionamiento);
+    }
+
     public function getErrores() : array {
         return self::$errores;
     }
@@ -101,6 +138,7 @@ class Propiedad {
     }
 
     //retorna array de objetos para mantener el patron de arquitectura de active record(se ocupa un objeto con las propiedades de la tabla de la base de datos)
+    //obtiene todos los registros
     public static function all() : array {
         $query = "SELECT * FROM propiedades";
         $statement = self::$db->query($query);
@@ -112,7 +150,17 @@ class Propiedad {
         return $array;
     }
 
-    //de array a object
+    //devuelve un registro en especifico
+    public static function find($id) : object {
+        $query = "SELECT * FROM propiedades WHERE id = :id";
+        $statement = self::$db->prepare($query);
+        $statement->execute([':id' => $id]);
+        $registro = $statement->fetch(PDO::FETCH_ASSOC);
+        $registro = self::convertirAObjeto($registro);
+        return $registro;
+    }
+
+    //de array assoc a object
     protected static function convertirAObjeto($registro) : object {
         //crea una instancia de su clase padre(esta misma)
         $object = new self;

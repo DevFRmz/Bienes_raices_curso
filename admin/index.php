@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+ini_set('display_errors', 1);
 
 use App\Propiedad;
 
@@ -30,7 +31,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 includeTemplate('header.php');
 //para mostrar mensaje de creacion de propiedad exitosa
-$resultado = $_GET['resultado'];
+$resultado = $_GET['resultado'] ?? 0;
 
 ?>
 
@@ -60,16 +61,16 @@ $resultado = $_GET['resultado'];
             <tbody>
                 <?php foreach($propiedades as $propiedad): ?>                  
                     <tr>
-                        <td><?php echo $propiedad['id'] ?></td>
-                        <td><?php echo $propiedad['titulo'] ?></td>
-                        <td><img src="/bienesraices/imagenes/<?php echo $propiedad['imagen'] ?>" alt="imagen propiedad"></td>
-                        <td>$<?php echo number_format( intval($propiedad['precio']), 2 ) ?></td>
+                        <td><?php echo $propiedad->id; ?></td>
+                        <td><?php echo $propiedad->titulo ?></td>
+                        <td><img src="/bienesraices/imagenes/<?php echo $propiedad->imagen; ?>" alt="imagen propiedad"></td>
+                        <td>$<?php echo number_format( intval($propiedad->precio), 2 ) ?></td>
                         <td>
                             <form method="post">
-                                <input type="hidden" name="id" value="<?php echo $propiedad['id'] ?>">
+                                <input type="hidden" name="id" value="<?php echo $propiedad->id ?>">
                                 <input type="submit" class="boton-rojo-block w-100" value="Eliminar">
                             </form>
-                            <a href="./propiedades/actualizar.php?id=<?php echo $propiedad['id'] ?>" class="boton-amarillo-block">Actualizar</a>
+                            <a href="./propiedades/actualizar.php?id=<?php echo $propiedad->id; ?>" class="boton-amarillo-block">Actualizar</a>
                         </td>
                     </tr>
                 <?php endforeach ?>
