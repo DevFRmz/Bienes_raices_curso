@@ -1,35 +1,33 @@
 <?php
 declare(strict_types = 1);
 ini_set('display_errors',1);
+require '../../includes/app.php';
 
 use App\Propiedad;
-
-require '../../includes/app.php';
+use App\Vendedor;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 if(!estaAutenticado()){
     header('Location: /bienesraices');
 }
 
 //validar la URL por id valido
-$id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
-if(!$id) header('Location: /bienesraices/admin');
+$id = filter_var( $_GET['id'], FILTER_VALIDATE_INT );
+if(!$id) header( 'Location: /bienesraices/admin' );
 
 //obtener datos de la propiedad
-$propiedad = Propiedad::find($id);
+$propiedad = Propiedad::find( $id );
 
-//obtener vendedores de la base de datos
-$statement = $conn->query("SELECT * FROM vendedores");
-$vendedores = $statement->fetchAll(PDO::FETCH_ASSOC);
+//obtener vendedores de la base de datosy
+$vendedores = Vendedor::all();
 
 //inicializar variable errores para evitar fallos
 $errores = [];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $imagenActual = $propiedad->imagen;
-    $propiedad = new Propiedad($_POST);
-    $propiedad->setImagen($imagenActual);
-    //si hay algun string que deveria ser number lo cambia
-    //$propiedad->validateNumber();
+    
+    $propiedad->sincronizar($_POST);
 
     $errores = $propiedad->validar();
 
@@ -53,11 +51,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $nombreImagen = md5( uniqid() ) . ".jpg";
             $propiedad->setImagen($nombreImagen);
 
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($_FILES['imagen']['tmp_name']);
+            $image->cover(800, 600);
+            $imageEncoded = $image->toJpeg();
+
             //subida de imagen
-            move_uploaded_file($_FILES['imagen']['tmp_name'], $carpetaImagenes . $nombreImagen);
+            $imageEncoded->save(CARPETA_IMAGENES . $nombreImagen);
 
         }
-        $succesfull = $propiedad->actualizar($id);
+        $succesfull = $propiedad->actualizar();
 
 
         if($succesfull) header('Location: /bienesraices/admin?resultado=2');

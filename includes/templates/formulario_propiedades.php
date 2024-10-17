@@ -33,11 +33,10 @@
 
     <fieldset>
         <legend>Vendedor</legend>
-
         <select name="vendedor_id">
             <option <?php echo'selected'; ?> disabled>Selecciona una opción</option>
             <?php foreach($vendedores as $vendedor): ?>
-                <option value="<?php echo $vendedor['id'] ?>"><?php echo "{$vendedor['nombre']} {$vendedor['apellido']}" ?></option>
+                <option value="<?php echo $vendedor->id ?>"><?php echo "{$vendedor->nombre} {$vendedor->apellido}" ?></option>
             <?php endforeach ?>
         </select>
     </fieldset>

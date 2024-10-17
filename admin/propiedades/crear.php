@@ -1,20 +1,18 @@
 <?php
 ini_set('display_errors', 1);
 require '../../includes/app.php';
+
 use App\Propiedad;
+use App\Vendedor;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
 
 if(!estaAutenticado()) header('Location: /bienesraices');
 
-
-//conexión a la base de datos ($conn)
-includeTemplate('header.php');
-
 //obtener vendedores de la base de datos
-$statement = $conn->query("SELECT * FROM vendedores");
-$vendedores = $statement->fetchAll(PDO::FETCH_ASSOC);
+$vendedores = Vendedor::all();
+
 
 $errores = [];
 $propiedad = new Propiedad;
@@ -25,16 +23,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if($_FILES['imagen']['tmp_name']){
         $nombreImagen = md5( uniqid() ) . ".jpg";
         $propiedad->setImagen($nombreImagen);
+        var_dump($propiedad->imagen);
+        var_dump($nombreImagen);
+
 
         //Realiza un resize
-        // create new image instance (800 x 600)
+        // create new image instance
         $manager = new ImageManager(new Driver());
         $image = $manager->read($_FILES['imagen']['tmp_name']);
         // crop the best fitting (600x360) ratio and resize to 800x600 pixel
         $image->cover(800, 600);
         $imageEncoded = $image->toJpeg(); 
     }
-    
     //verificar si estan todos los datos completos
     $errores = $propiedad->validar();
 
@@ -54,6 +54,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         if($succesfull) header('Location: /bienesraices/admin?resultado=1');
     }
 }
+
+    includeTemplate('header.php');
 ?>
 
     <main class="contenedor seccion">

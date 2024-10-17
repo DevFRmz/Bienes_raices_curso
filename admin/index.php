@@ -6,7 +6,7 @@ use App\Propiedad;
 
 require '../includes/app.php';
 
-if(!estaAutenticado()) header('Location: /bienesraices');
+if(!estaAutenticado()) header('Location: /bienesraices/login.php');
 
 //Metodo para obtener propiedades de la base de datos
 $propiedades = Propiedad::all();
@@ -16,15 +16,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     //validar que sea numero entero
     $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
     
-    //eliminar archivo de imagen
-    $statement = $conn->prepare("SELECT imagen from propiedades WHERE id = :id");
-    $statement->execute([":id" => $id]);
-    $imagen = $statement->fetch(PDO::FETCH_ASSOC)['imagen'];
-    unlink('../imagenes/' . $imagen);//unlik elimina un archivo en la ruta especificada por parametro
-
-    //eliminar propiedad
-    $statement = $conn->prepare("DELETE FROM propiedades WHERE id = :id");
-    $succesfull = $statement->execute([":id" => $id]);
+    if($id){
+        $propiedad = Propiedad::find($id);
+        $succesfull = $propiedad->eliminar();
+    }
 
     if($succesfull) header('Location: /bienesraices/admin?resultado=3');
 }
