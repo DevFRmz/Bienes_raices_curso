@@ -18,7 +18,7 @@ $errores = [];
 $propiedad = new Propiedad;
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){ 
-    $propiedad = new Propiedad($_POST);
+    $propiedad->sincronizar($_POST);
 
     if($_FILES['imagen']['tmp_name']){
         $nombreImagen = md5( uniqid() ) . ".jpg";

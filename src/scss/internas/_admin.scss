@@ -44,12 +44,22 @@
     }
 
     tbody {
+
         td {
             text-align: center;
+            padding-bottom: 2rem;
         }
 
     }
 
+}
+
+.administrar-container {
+    margin-bottom: 2rem;
+
+    p {
+        margin: 0;
+    }
 }
 
 .img-small {
@@ -59,4 +69,9 @@
 
 .login {
     width: 50rem;
+}
+
+.admin-img {
+    width: 30rem;
+    margin: 0 auto;
 }

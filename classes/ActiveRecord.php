@@ -89,12 +89,11 @@ abstract class ActiveRecord {
 
         foreach ($datos as $key => $value) {
             if(!$value){
-                self::$errores[] = "Campo $key es requerido";
+                static::$errores[] = "Campo $key es requerido";
             }
         }
 
-
-        return self::$errores;
+        return static::$errores;
     }
 
     public function getErrores() : array {
@@ -125,7 +124,7 @@ abstract class ActiveRecord {
         $statement = self::$db->prepare($query);
         $statement->execute([':id' => $id]);
         $registro = $statement->fetch(PDO::FETCH_ASSOC);
-        $registro = self::convertirAObjeto($registro);
+        $registro = static::convertirAObjeto($registro);
         return $registro;
     }
 
