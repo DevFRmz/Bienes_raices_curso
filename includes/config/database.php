@@ -2,7 +2,7 @@
 $host = 'localhost';
 $db = 'bienesraices_app';
 $user = 'root';
-$password = '';
+$password = 'FelipeRmz082001.';
 
 try{
 
@@ -13,4 +13,3 @@ try{
     die ("Error al conectar con la base de datos {$error->getMessage()}");
     
 }
-

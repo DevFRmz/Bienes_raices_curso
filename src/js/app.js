@@ -35,8 +35,34 @@ const darkMode = () => {
     });
 }
 
+const adminMenuFilterShow = () => {
+    const vendedoresBtn = document.querySelector('.vendedores-filter-btn');
+    const propiedadesBtn = document.querySelector('.propiedades-filter-btn');
+
+    const vendedoresTable = document.querySelector('.administrar-vendedores');
+    const propiedadesTable = document.querySelector('.administrar-propiedades');
+
+    vendedoresBtn.addEventListener('click', () => {
+        vendedoresTable.classList.remove('hidden');
+        vendedoresBtn.classList.add('darken');
+        
+        propiedadesTable.classList.add('hidden');
+        propiedadesBtn.classList.remove('darken');
+    });
+
+    propiedadesBtn.addEventListener('click', () => {
+        propiedadesTable.classList.remove('hidden');
+        propiedadesBtn.classList.add('darken');
+        
+        vendedoresTable.classList.add('hidden');
+        vendedoresBtn.classList.remove('darken');
+    });
+}
+
+
 //funcion autoinvocada (IIFE) 
 (() => {
     menuHamburguer();
     darkMode();
+    adminMenuFilterShow();
 })();

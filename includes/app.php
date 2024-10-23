@@ -1,8 +1,6 @@
 <?php
 
 use App\ActiveRecord;
-use App\Propiedad;
-use App\Vendedor;
 
 require 'funciones.php';
 require 'config/database.php';

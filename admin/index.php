@@ -3,13 +3,15 @@ declare(strict_types = 1);
 ini_set('display_errors', 1);
 
 use App\Propiedad;
+use App\Vendedor;
 
 require '../includes/app.php';
 
-if(!estaAutenticado()) header('Location: /bienesraices/login.php');
+if(!estaAutenticado()) header('Location: /' .CARPETA_PROYECTO . '/login.php');
 
 //Metodo para obtener propiedades de la base de datos
 $propiedades = Propiedad::all();
+$vendedores = Vendedor::all();
 
 //eliminar propiedad
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -21,7 +23,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $succesfull = $propiedad->eliminar();
     }
 
-    if($succesfull) header('Location: /bienesraices/admin?resultado=3');
+    if($succesfull) header('Location: /' . CARPETA_PROYECTO . '/admin?resultado=3');
 }
 
 includeTemplate('header.php');
@@ -41,12 +43,15 @@ $resultado = $_GET['resultado'] ?? 0;
             <p class="alerta exito">Anuncio Eliminado correctamente</p>
         <?php endif ?>
         
-        <div class="administrar-container">
+        <div class="administrar-filters">
             <p>Selecciona un filtro</p>
-            <button class="administrar-propiedad boton-verde">Propiedad</button>
-            <button class="administrar-vendedor boton-verde">Vendedor</button>
+            <div>
+                <button class="propiedades-filter-btn boton-verde">Propiedades</button>
+                <button class="vendedores-filter-btn boton-verde">Vendedores</button>
+            </div>
         </div>
         
+        <!-- Propiedades -->
         <div class="administrar-propiedades hidden">
             <a href="./propiedades/crear.php" class="boton-verde boton-add">Añadir Propiedad</a>
             
@@ -65,7 +70,7 @@ $resultado = $_GET['resultado'] ?? 0;
                         <tr>
                             <td><?php echo $propiedad->id; ?></td>
                             <td><?php echo $propiedad->titulo ?></td>
-                            <td><img class="admin-img" src="/bienesraices/imagenes/<?php echo $propiedad->imagen; ?>" alt="imagen propiedad"></td>
+                            <td><img class="admin-img" src="/<?php echo CARPETA_PROYECTO?>/imagenes/<?php echo $propiedad->imagen; ?>" alt="imagen propiedad"></td>
                             <td>$<?php echo number_format( intval($propiedad->precio), 2 ) ?></td>
                             <td>
                                 <form method="post">
@@ -84,9 +89,7 @@ $resultado = $_GET['resultado'] ?? 0;
             <?php endif ?>
         </div>
         
-        /**
-            Todo !!
-        */
+        <!-- Vendedores -->
         <div class="administrar-vendedores hidden">
             <a href="./vendedores/crear.php" class="boton-verde boton-add">Añadir Vendedor</a>
             
@@ -97,29 +100,30 @@ $resultado = $_GET['resultado'] ?? 0;
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Telefono</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($vendedores as $vendedor): ?>                  
                         <tr>
                             <td><?php echo $vendedor->id; ?></td>
-                            <td><?php echo $propiedad->titulo ?></td>
-                            <td><img class="admin-img" src="/bienesraices/imagenes/<?php echo $propiedad->imagen; ?>" alt="imagen propiedad"></td>
-                            <td>$<?php echo number_format( intval($propiedad->precio), 2 ) ?></td>
+                            <td><?php echo $vendedor->nombre ?></td>
+                            <td><?php echo $vendedor->apellido ?></td>
+                            <td><?php echo $vendedor->telefono ?></td>
                             <td>
                                 <form method="post">
-                                    <input type="hidden" name="id" value="<?php echo $propiedad->id ?>">
+                                    <input type="hidden" name="id" value="<?php echo $vendedor->id ?>">
                                     <input type="submit" class="boton-rojo-block w-100" value="Eliminar">
                                 </form>
-                                <a href="./propiedades/actualizar.php?id=<?php echo $propiedad->id; ?>" class="boton-amarillo-block">Actualizar</a>
+                                <a href="./propiedades/actualizar.php?id=<?php echo $vendedor->id; ?>" class="boton-amarillo-block">Actualizar</a>
                             </td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
             </table>
             
-            <?php if(!$propiedades): ?>
-                    <h3>No hay propiedades, agrega una!!</h3>
+            <?php if(!$vendedores): ?>
+                    <h3>No hay vendedores, agrega uno!!</h3>
             <?php endif ?>
         </div>
 

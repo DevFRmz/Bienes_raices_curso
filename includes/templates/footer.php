@@ -10,7 +10,7 @@
         </div>
     </footer>
 
-    <script src="/bienesraices/build/js/bundle.min.js"></script>
+    <script src="/<?php echo CARPETA_PROYECTO ?>/build/js/bundle.min.js"></script>
 </body>
 
 </html>

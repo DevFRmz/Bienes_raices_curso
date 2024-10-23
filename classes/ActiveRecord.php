@@ -8,7 +8,7 @@ abstract class ActiveRecord {
     public $id;
     public $imagen;
     //columnas de la base de datos los cuales son los mismos que los atributos de la clase
-    protected static $columnas = ['id', 'vendedor_id', 'titulo', 'precio', 'imagen', 'descripcion', 'habitaciones', 'wc', 'estacionamiento', 'creado'];
+    protected static $columnas = [];
     protected static PDO $db;//conexión con la base de datos
     protected static $tabla = ''; //cada clase sustituira esta variable con el nombre de su tabla en la bd
     protected static $errores = [];
@@ -28,7 +28,7 @@ abstract class ActiveRecord {
     public function atributos() : array {
         $atributos = [];
 
-        foreach(self::$columnas as $columna) {
+        foreach(static::$columnas as $columna) {
             if($columna == 'id') continue;
             $atributos[$columna] = $this->$columna;
         }
@@ -111,6 +111,7 @@ abstract class ActiveRecord {
         $query = "SELECT * FROM " . static::$tabla;
         $statement = self::$db->query($query);
         $resultado = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $array = [];
         foreach($resultado as $value){
             $array[] = self::convertirAObjeto($value);
         }

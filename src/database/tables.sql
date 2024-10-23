@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS bienesraices_app;
+
+USE bienesraices_app;
 
 CREATE TABLE vendedores(
     id INT(11) AUTO_INCREMENT PRIMARY KEY,

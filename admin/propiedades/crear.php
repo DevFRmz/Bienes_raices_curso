@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         $succesfull = $propiedad->guardar();
 
-        if($succesfull) header('Location: /bienesraices/admin?resultado=1');
+        if($succesfull) header('Location: /' . CARPETA_PROYECTO . '/admin?resultado=1');
     }
 }
 
