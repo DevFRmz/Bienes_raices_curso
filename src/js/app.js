@@ -35,12 +35,14 @@ const darkMode = () => {
     });
 }
 
-const adminMenuFilterShow = () => {
+const adminMenuFilterShow = () => {    
     const vendedoresBtn = document.querySelector('.vendedores-filter-btn');
     const propiedadesBtn = document.querySelector('.propiedades-filter-btn');
 
     const vendedoresTable = document.querySelector('.administrar-vendedores');
     const propiedadesTable = document.querySelector('.administrar-propiedades');
+
+    if(!vendedoresBtn || !propiedadesBtn) return;
 
     vendedoresBtn.addEventListener('click', () => {
         vendedoresTable.classList.remove('hidden');

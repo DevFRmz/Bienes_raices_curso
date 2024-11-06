@@ -119,7 +119,27 @@ abstract class ActiveRecord {
         return $array;
     }
 
+    /**
+     * @param int $cantidad Cantidad de registros a obtener
+     * @return $array conjunto de objetos segun la cantidad especificada
+     */
+    public static function get(int $cantidad) : array {
+        //usar static en lugar de self hace que tome el valor de la variable $tabla de la clase hija en lugar de esta misma clase
+        $query = "SELECT * FROM " . static::$tabla . " Limit " . $cantidad;
+        $statement = self::$db->query($query);
+        $resultado = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $array = [];
+        foreach($resultado as $value){
+            $array[] = self::convertirAObjeto($value);
+        }
+
+        return $array;
+    }
+
     //devuelve un registro en especifico
+    /**
+     * @param int $id id del registro a buscar
+     */
     public static function find($id) : object {
         $query = "SELECT * FROM " . static::$tabla . " WHERE id = :id";
         $statement = self::$db->prepare($query);

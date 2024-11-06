@@ -1,6 +1,5 @@
 <?php
 declare(strict_types = 1);
-ini_set('display_errors',1);
 require '../../includes/app.php';
 
 use App\Propiedad;
@@ -9,17 +8,17 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
 if(!estaAutenticado()){
-    header('Location: /bienesraices');
+    header('Location: /'. CARPETA_PROYECTO .'/admin');
 }
 
 //validar la URL por id valido
 $id = filter_var( $_GET['id'], FILTER_VALIDATE_INT );
-if(!$id) header( 'Location: /bienesraices/admin' );
+if(!$id) header( 'Location: /'. CARPETA_PROYECTO .'/admin' );
 
 //obtener datos de la propiedad
 $propiedad = Propiedad::find( $id );
 
-//obtener vendedores de la base de datosy
+//obtener vendedores de la base de datos
 $vendedores = Vendedor::all();
 
 //inicializar variable errores para evitar fallos
@@ -63,7 +62,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $succesfull = $propiedad->actualizar();
 
 
-        if($succesfull) header('Location: /bienesraices/admin?resultado=2');
+        if($succesfull) header('Location: /'. CARPETA_PROYECTO .'/admin?resultado=2');
     }
 }
 

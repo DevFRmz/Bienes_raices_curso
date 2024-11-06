@@ -20,7 +20,7 @@ includeTemplate('header.php');
                 </div>
 
                 <div class="texto-entrada">
-                    <a href="entrada.html">
+                    <a href="entrada.php">
                         <h4>Terraza en el techo de tu casa</h4>
                         <p>Escrito el: <span>20/10/2024</span> por: <span>Admin</span></p>
                         <p>
@@ -41,7 +41,7 @@ includeTemplate('header.php');
                 </div>
 
                 <div class="texto-entrada">
-                    <a href="entrada.html">
+                    <a href="entrada.php">
                         <h4>Guia para la decoracion de tu hogar</h4>
                         <p>Escrito el: <span>20/10/2024</span> por: <span>Admin</span></p>
                         <p>
